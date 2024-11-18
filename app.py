@@ -12,9 +12,12 @@ if img:
     st.image(img,width=300)
 
     def model():
-        resnet18 = torchvision.models.resnet18(pretrained=True)
+        weights = torchvision.models.ResNet18_Weights.IMAGENET1K_V1
+        resnet18 = torchvision.models.resnet18(weights=weights)
+    
         resnet18.fc = torch.nn.Linear(in_features=512, out_features=3)  # Output layer for 3 classes
-        resnet18.load_state_dict(torch.load("resnet18.pth"))
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        resnet18.load_state_dict(torch.load("resnet18.pth", map_location=device))
         resnet18.eval()
 
         try:
